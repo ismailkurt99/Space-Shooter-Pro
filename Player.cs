@@ -5,24 +5,31 @@ using UnityEngine;
 
 public class Player: MonoBehaviour
 {
+  private Vector3 laserOffset = new Vector3 (0, 0.8f, 0);
+
   [SerializeField]
   private float _speed = 3.5f;
   [SerializeField]
-
   private GameObject _laserPrefab;
+  [SerializeField]
+  private float _fireRate = 0.5f;
+  private float _canFire = -1f;
+  [SerializeField]
+  private int _lives = 3;
 
   void Start()
   {
-    transform.position = new Vector3(0,0,0);
+    transform.position = new Vector3(0,-3f,0);
   }
 
   void Update()
   {
     CalculateMovement();
-    if (Input.GetKeyDown(KeyCode.Space))
+    if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
     {
-      Instantiate(_laserPrefab, transform.position, Quaternion.identity);
+      FireLaser();
     }
+    
   }
 
   void CalculateMovement()
@@ -53,4 +60,21 @@ public class Player: MonoBehaviour
     }
   }
   
+  void FireLaser()
+  {
+      _canFire = Time.time + _fireRate;
+      Instantiate(_laserPrefab, transform.position + laserOffset, Quaternion.identity);
   }
+
+  public void Damage()
+  {
+    _lives --;
+    if(_lives < 1)
+    {
+      Destroy(this.gameObject);
+    }
+  }
+
+}
+
+
