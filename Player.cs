@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Player: MonoBehaviour
 {
-  private Vector3 laserOffset = new Vector3 (0, 0.8f, 0);
+  private Vector3 laserOffset = new Vector3 (0, 1.05f, 0);
 
   [SerializeField]
   private float _speed = 3.5f;
@@ -16,10 +16,16 @@ public class Player: MonoBehaviour
   private float _canFire = -1f;
   [SerializeField]
   private int _lives = 3;
+  private SpawnManager _spawnManager;
 
   void Start()
   {
     transform.position = new Vector3(0,-3f,0);
+    _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+    if (_spawnManager == null)
+    {
+      Debug.Log("The Spawn Manager is null!");
+    }
   }
 
   void Update()
@@ -71,6 +77,7 @@ public class Player: MonoBehaviour
     _lives --;
     if(_lives < 1)
     {
+      _spawnManager.onPlayerDeath();
       Destroy(this.gameObject);
     }
   }
